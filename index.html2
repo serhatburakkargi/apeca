@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>APE Creative Agency</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    /* =============================================
+       DESIGN TOKENS
+    ============================================= */
+    :root {
+      --color-black: #000000;
+      --color-white: #ffffff;
+      --color-card-bg: #cccccc;
+      --color-shadow-card: rgba(0, 0, 0, 0.16);
+      --color-shadow-icon: rgba(0, 0, 0, 0.3);
+      --color-text-primary: #000000;
+
+      --font-family: 'Inter', sans-serif;
+      --font-size-sm: 15px;
+      --font-size-md: 25px;
+
+      --font-weight-medium: 500;
+      --font-weight-bold: 700;
+      --font-weight-black: 900;
+
+      --radius-card: 25px;
+      --radius-row: 15px;
+      --radius-icon-outer: 15px;
+      --radius-icon-inner: 5px;
+
+      --shadow-row: 3px 3px 3px 0px rgba(0, 0, 0, 0.16);
+      --shadow-icon-outer: 1px 3px 5px 0px rgba(0, 0, 0, 0.3);
+
+      --navbar-height: 53px;
+    }
+
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      font-family: var(--font-family);
+      background-color: var(--color-white);
+      overflow-x: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    /* =============================================
+       NAVBAR
+    ============================================= */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--navbar-height);
+      background-color: var(--color-black);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+    }
+
+    .navbar__brand {
+      color: var(--color-white);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-black);
+      letter-spacing: 0.04em;
+    }
+
+    .navbar__nav {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .navbar__nav a {
+      color: var(--color-white);
+      font-size: 14px;
+      font-weight: var(--font-weight-medium);
+      transition: opacity 0.2s;
+    }
+
+    .navbar__nav a:hover {
+      opacity: 0.7;
+    }
+
+    /* Hamburger button — hidden on desktop */
+    .navbar__hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      flex-direction: column;
+      gap: 5px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .navbar__hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background-color: var(--color-white);
+      border-radius: 2px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    /* Hamburger → X animation */
+    .navbar__hamburger[aria-expanded="true"] span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+    .navbar__hamburger[aria-expanded="true"] span:nth-child(2) {
+      opacity: 0;
+    }
+    .navbar__hamburger[aria-expanded="true"] span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    /* =============================================
+       DECORATIVE BACKGROUND ELEMENTS
+    ============================================= */
+    .page {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Bottom-left watermark text */
+    .deco__watermark {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 540px;
+      height: 540px;
+      opacity: 0.20;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .deco__watermark img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Top-right decorative shape */
+    .deco__shape-tr {
+      position: absolute;
+      top: -104px;
+      right: 0;
+      width: 591px;
+      height: 591px;
+      opacity: 0.20;
+      pointer-events: none;
+    }
+
+    .deco__shape-tr img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* =============================================
+       MAIN CONTENT
+    ============================================= */
+    main {
+      padding-top: var(--navbar-height);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* =============================================
+       LINK CARD (outer container)
+    ============================================= */
+    .link-card {
+      background-color: var(--color-card-bg);
+      border-radius: var(--radius-card);
+      padding: 24px 24px 24px 24px;
+      width: 817px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* =============================================
+       PROFILE ROW (top header row — not clickable)
+    ============================================= */
+    .profile-row {
+      background-color: var(--color-white);
+      border-radius: var(--radius-row);
+      box-shadow: var(--shadow-row);
+      height: 75px;
+      display: flex;
+      align-items: center;
+      padding: 0 17px;
+      gap: 10px;
+    }
+
+    .profile-row__icon-wrap {
+      width: 75px;
+      height: 75px;
+      background-color: var(--color-white);
+      border-radius: var(--radius-icon-outer);
+      box-shadow: var(--shadow-row);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-left: -17px; /* flush with card edge */
+    }
+
+    .profile-row__icon {
+      width: 57px;
+      height: 57px;
+      border-radius: var(--radius-icon-inner);
+      box-shadow: var(--shadow-row);
+      object-fit: cover;
+    }
+
+    .profile-row__info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .profile-row__name {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-black);
+      color: var(--color-text-primary);
+      line-height: normal;
+      white-space: nowrap;
+    }
+
+    .profile-row__sub {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+      line-height: normal;
+      white-space: nowrap;
+    }
+
+    /* =============================================
+       LINK ROW (clickable rows)
+    ============================================= */
+    .link-row {
+      background-color: var(--color-white);
+      border-radius: var(--radius-row);
+      box-shadow: var(--shadow-row);
+      height: 75px;
+      display: flex;
+      align-items: center;
+      padding: 0 17px;
+      gap: 14px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
+    }
+
+    .link-row:hover {
+      transform: translateY(-2px);
+      box-shadow: 4px 6px 10px 0px rgba(0, 0, 0, 0.18);
+    }
+
+    .link-row__icon-wrap {
+      width: 50px;
+      height: 50px;
+      background-color: var(--color-white);
+      border-radius: var(--radius-icon-outer);
+      box-shadow: var(--shadow-icon-outer);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .link-row__icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-icon-inner);
+      object-fit: cover;
+    }
+
+    .link-row__icon--trendyol {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-icon-inner);
+      background-color: var(--color-white);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .link-row__icon--trendyol img {
+      width: 97.78%;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .link-row__label {
+      font-size: var(--font-size-md);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-primary);
+      line-height: normal;
+      white-space: nowrap;
+    }
+
+    /* =============================================
+       TABLET (max-width: 1024px)
+    ============================================= */
+    @media (max-width: 1024px) {
+      .navbar__nav {
+        position: fixed;
+        top: var(--navbar-height);
+        left: 0;
+        width: 100%;
+        background-color: var(--color-black);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.35s ease;
+        z-index: 99;
+      }
+
+      .navbar__nav.is-open {
+        max-height: 300px;
+      }
+
+      .navbar__nav li {
+        width: 100%;
+      }
+
+      .navbar__nav a {
+        display: block;
+        padding: 14px 40px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        font-size: 15px;
+      }
+
+      .navbar__hamburger {
+        display: flex;
+      }
+
+      .deco__shape-tr {
+        width: 280px;
+        height: 280px;
+      }
+
+      .deco__watermark {
+        width: 280px;
+        height: 280px;
+      }
+
+      .link-card {
+        width: calc(100% - 48px);
+        max-width: 600px;
+      }
+
+      .link-row__label {
+        font-size: 20px;
+      }
+    }
+
+    /* =============================================
+       MOBILE (max-width: 600px)
+    ============================================= */
+    @media (max-width: 600px) {
+      .navbar {
+        padding: 0 16px;
+      }
+
+      .navbar__brand {
+        font-size: 14px;
+      }
+
+      .navbar__nav a {
+        padding: 14px 16px;
+      }
+
+      .deco__shape-tr {
+        width: 160px;
+        height: 160px;
+        top: -40px;
+      }
+
+      .deco__watermark {
+        width: 160px;
+        height: 160px;
+      }
+
+      main {
+        padding-top: calc(var(--navbar-height) + 20px);
+        padding-bottom: 32px;
+        align-items: flex-start;
+        min-height: unset;
+      }
+
+      .link-card {
+        width: calc(100% - 24px);
+        padding: 12px;
+        gap: 8px;
+        border-radius: 18px;
+      }
+
+      /* Profile row */
+      .profile-row {
+        height: auto;
+        min-height: 60px;
+        padding: 10px 12px;
+        gap: 10px;
+      }
+
+      .profile-row__icon-wrap {
+        width: 56px;
+        height: 56px;
+        min-width: 56px;
+        margin-left: -12px;
+      }
+
+      .profile-row__icon {
+        width: 42px;
+        height: 42px;
+      }
+
+      .profile-row__name {
+        font-size: 13px;
+        white-space: normal;
+      }
+
+      .profile-row__sub {
+        font-size: 12px;
+        white-space: normal;
+      }
+
+      /* Link rows */
+      .link-row {
+        height: 60px;
+        padding: 0 12px;
+        gap: 12px;
+        border-radius: 12px;
+      }
+
+      .link-row__icon-wrap {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        border-radius: 10px;
+      }
+
+      .link-row__icon,
+      .link-row__icon--trendyol {
+        width: 30px;
+        height: 30px;
+      }
+
+      .link-row__label {
+        font-size: 16px;
+        white-space: normal;
+      }
+    }
+
+    /* =============================================
+       VERY SMALL (max-width: 380px)
+    ============================================= */
+    @media (max-width: 380px) {
+      .link-card {
+        width: calc(100% - 16px);
+        padding: 10px;
+      }
+
+      .link-row__label {
+        font-size: 14px;
+      }
+
+      .profile-row__name,
+      .profile-row__sub {
+        font-size: 11px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header>
+    <nav class="navbar" role="navigation" aria-label="Ana navigasyon">
+      <span class="navbar__brand">APE</span>
+
+      <ul class="navbar__nav" id="nav-menu">
+        <li><a href="#">Ana Sayfa</a></li>
+        <li><a href="#">Hakkımızda</a></li>
+        <li><a href="#">İletişim</a></li>
+      </ul>
+
+      <button
+        class="navbar__hamburger"
+        id="hamburger-btn"
+        aria-controls="nav-menu"
+        aria-expanded="false"
+        aria-label="Menüyü aç/kapat"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- PAGE WRAPPER -->
+  <div class="page">
+
+    <!-- Decorative bottom-left watermark -->
+    <div class="deco__watermark" aria-hidden="true">
+      <img
+        src="https://www.figma.com/api/mcp/asset/4fd1a113-bd8d-4c46-a977-335858f53de6"
+        alt=""
+      />
+    </div>
+
+    <!-- Decorative top-right shape -->
+    <div class="deco__shape-tr" aria-hidden="true">
+      <img
+        src="https://www.figma.com/api/mcp/asset/df729947-b831-4de1-914e-76599c206c44"
+        alt=""
+      />
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main>
+      <div class="link-card" role="list">
+
+        <!-- Profile Row (non-clickable) -->
+        <div class="profile-row" role="listitem">
+          <div class="profile-row__icon-wrap">
+            <img
+              class="profile-row__icon"
+              src="https://www.figma.com/api/mcp/asset/a56105e6-56f0-4afa-88bb-e0f751237cc1"
+              alt="APE Creative Agency logo"
+            />
+          </div>
+          <div class="profile-row__info">
+            <span class="profile-row__name">APE Creative Agency</span>
+            <span class="profile-row__sub">Online Satış, Ajans</span>
+          </div>
+        </div>
+
+        <!-- Instagram Row -->
+        <a
+          class="link-row"
+          href="https://www.instagram.com/apecreativeagency/"
+          target="_blank"
+          rel="noopener noreferrer"
+          role="listitem"
+          aria-label="APE Creative Agency Instagram sayfasını ziyaret et"
+        >
+          <div class="link-row__icon-wrap">
+            <img
+              class="link-row__icon"
+              src="https://www.figma.com/api/mcp/asset/77cfb87c-2418-4dad-8540-9a3b66228c6a"
+              alt="Instagram simgesi"
+            />
+          </div>
+          <span class="link-row__label">APE Creative Agency</span>
+        </a>
+
+        <!-- Hepsiburada Row -->
+        <a
+          class="link-row"
+          href="https://www.hepsiburada.com/shitpost-cikartma-seti-320-ad-cikartma-sticker-shitpost-sticker-funny-komik-meme-bullet-journal-ajanda-bullet-pm-HBC0000E2OS7Q?magaza=MENEJER%20B%C4%B0LG%C4%B0SAYAR"
+          target="_blank"
+          rel="noopener noreferrer"
+          role="listitem"
+          aria-label="Hepsiburada mağazasını ziyaret et"
+        >
+          <div class="link-row__icon-wrap">
+            <img
+              class="link-row__icon"
+              src="https://www.figma.com/api/mcp/asset/962003b0-9469-4dd1-a13b-0a171b452b12"
+              alt="Hepsiburada simgesi"
+            />
+          </div>
+          <span class="link-row__label">Hepsiburada</span>
+        </a>
+
+        <!-- Shopier Row -->
+        <a
+          class="link-row"
+          href="https://www.shopier.com/apecreative"
+          target="_blank"
+          rel="noopener noreferrer"
+          role="listitem"
+          aria-label="Shopier mağazasını ziyaret et"
+        >
+          <div class="link-row__icon-wrap">
+            <img
+              class="link-row__icon"
+              src="https://www.figma.com/api/mcp/asset/887a7706-0b1a-4c5f-b576-4548a21835e7"
+              alt="Shopier simgesi"
+            />
+          </div>
+          <span class="link-row__label">Shopier</span>
+        </a>
+
+        <!-- Trendyol Row (no link in Figma) -->
+        <div
+          class="link-row"
+          role="listitem"
+          aria-label="Trendyol"
+        >
+          <div class="link-row__icon-wrap">
+            <div class="link-row__icon link-row__icon--trendyol">
+              <img
+                src="https://www.figma.com/api/mcp/asset/bae30e69-4568-4ae9-815b-cdbc3f1a221b"
+                alt="Trendyol simgesi"
+              />
+            </div>
+          </div>
+          <span class="link-row__label">Trendyol</span>
+        </div>
+
+      </div>
+    </main>
+
+  </div><!-- /.page -->
+
+  <script>
+    (function () {
+      var btn = document.getElementById('hamburger-btn');
+      var menu = document.getElementById('nav-menu');
+
+      btn.addEventListener('click', function () {
+        var expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        menu.classList.toggle('is-open', !expanded);
+      });
+
+      // Close menu when a link is clicked
+      menu.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () {
+          btn.setAttribute('aria-expanded', 'false');
+          menu.classList.remove('is-open');
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
